@@ -6,7 +6,16 @@
     <description>Recent content on Mai-Anh&#39;s blog about my AI Engineer learning including ML, DL, DSA. Hope it helps!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Jun 2023 23:51:28 +0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 09 Jun 2023 23:52:15 +0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kl_and_cross_entropy</title>
+      <link>/blogs/kl_and_cross_entropy/</link>
+      <pubDate>Fri, 09 Jun 2023 23:52:15 +0700</pubDate>
+      
+      <guid>/blogs/kl_and_cross_entropy/</guid>
+      <description>KL Divergent import torch Cross Entropy </description>
+    </item>
+    
     <item>
       <title>Unsupervise_domain_adaptation</title>
       <link>/blogs/unsupervise_domain_adaptation/</link>
