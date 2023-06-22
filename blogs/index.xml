@@ -9,10 +9,10 @@
     <lastBuildDate>Fri, 09 Jun 2023 23:51:28 +0700</lastBuildDate><atom:link href="/blogs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Domain adaptation (Part 1 - Covariate Shift)</title>
-      <link>/blogs/uda/</link>
+      <link>/blogs/domain_adaptation/</link>
       <pubDate>Fri, 09 Jun 2023 23:51:28 +0700</pubDate>
       
-      <guid>/blogs/uda/</guid>
+      <guid>/blogs/domain_adaptation/</guid>
       <description>TL;DR: This blog focuses on the topic of Domain Adaptation, specifically in the unsupervised case and classification task. However, it does not cover semi-domain adaptation at this time. Domain Adaptation is a common challenge in machine learning that arises when there is a distribution mismatch between the training and testing data.
 This blog post is inspired by the Stanford CS330 Deep Multi-Task &amp;amp; Meta Learning lecture series, specifically Lecture 13 and 14.</description>
     </item>
