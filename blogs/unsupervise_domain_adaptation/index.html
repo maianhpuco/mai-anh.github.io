@@ -5,9 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Unsupervise_domain_adaptation | Mai-Anh&#39;s blog about my AI Engineer learning including ML, DL, DSA. Hope it helps!</title>
+<title>Unsupervise domain adaptation | Mai-Anh&#39;s blog about my AI Engineer learning including ML, DL, DSA. Hope it helps!</title>
 <meta name="keywords" content="">
-<meta name="description" content="test page ">
+<meta name="description" content="In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)
+Introduction (or Motivation for me writing this) Why it motivate me to write about is: What is this for, example of application -&gt; let read to discover some available solutions.
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .">
 <meta name="author" content="">
 <link rel="canonical" href="/blogs/unsupervise_domain_adaptation/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
@@ -56,16 +58,20 @@
         }
 
     </style>
-</noscript><meta property="og:title" content="Unsupervise_domain_adaptation" />
-<meta property="og:description" content="test page " />
+</noscript><meta property="og:title" content="Unsupervise domain adaptation" />
+<meta property="og:description" content="In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)
+Introduction (or Motivation for me writing this) Why it motivate me to write about is: What is this for, example of application -&gt; let read to discover some available solutions.
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/blogs/unsupervise_domain_adaptation/" /><meta property="article:section" content="blogs" />
 <meta property="article:published_time" content="2023-06-09T23:51:28+07:00" />
 <meta property="article:modified_time" content="2023-06-09T23:51:28+07:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Unsupervise_domain_adaptation"/>
-<meta name="twitter:description" content="test page "/>
+<meta name="twitter:title" content="Unsupervise domain adaptation"/>
+<meta name="twitter:description" content="In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)
+Introduction (or Motivation for me writing this) Why it motivate me to write about is: What is this for, example of application -&gt; let read to discover some available solutions.
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) ."/>
 
 
 <script type="application/ld+json">
@@ -82,7 +88,7 @@
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "Unsupervise_domain_adaptation",
+      "name": "Unsupervise domain adaptation",
       "item": "/blogs/unsupervise_domain_adaptation/"
     }
   ]
@@ -92,14 +98,14 @@
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Unsupervise_domain_adaptation",
-  "name": "Unsupervise_domain_adaptation",
-  "description": "test page ",
+  "headline": "Unsupervise domain adaptation",
+  "name": "Unsupervise domain adaptation",
+  "description": "In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)\nIntroduction (or Motivation for me writing this) Why it motivate me to write about is: What is this for, example of application -\u0026gt; let read to discover some available solutions.\nunderstand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .",
   "keywords": [
     
   ],
-  "articleBody": "test page ",
-  "wordCount" : "2",
+  "articleBody": " In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)\nIntroduction (or Motivation for me writing this) Why it motivate me to write about is: What is this for, example of application -\u003e let read to discover some available solutions.\nunderstand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .\nProblem setting, or when do we get this kind of problem. Some assumption in this problem setting:\nthis blogs is structured as the lecture of Standford because I found it amazing, but the code was re-implemented/modified by me, source code reference is surely be referenced.\nCovariate Shift Problem: Have you ever face problem of different distribution of train set and test set? Example: Your train set is, but your test set is …\nAdd figures here\nExplain Solution Important Sampling: cite some solution, but re-code the one in the lecture Standford -\u003e TNSE to visualize Write down the math Comment about this covariate\nPros: Cons: Conclusion: Simple solution, we need a more generalize solution for the case where train set support does not include test set\nAn example: different chất nhuộm, thiết bị…etc\nDomain adaptation Example where the solution above can not solve: (accuracy is low) run mnist\nExplain solution: Mapping the features space in stead of sample space (adding introduction about features space)\nCode:\nAdding the code of Domain Adaptation: TNSE visualize Loss chart Compare before and after implement with domain adaptation, compare with implement with important sampling save the TNSE of feature map -\u003e checking the mapp Comment: Pros: Cons: Domain Translation Intro: this post is seem two long for a relaxation readling later in the next\nTodo:\nImportant sampling Gan blog post Cycle Gan blog post Question:\nAny new idea comming up for paper writing?? ",
+  "wordCount" : "331",
   "inLanguage": "en",
   "datePublished": "2023-06-09T23:51:28+07:00",
   "dateModified": "2023-06-09T23:51:28+07:00",
@@ -168,13 +174,71 @@
   <header class="post-header">
     
     <h1 class="post-title">
-      Unsupervise_domain_adaptation
+      Unsupervise domain adaptation
     </h1>
     <div class="post-meta"><span title='2023-06-09 23:51:28 +0700 +07'>June 9, 2023</span>
 
 </div>
   </header> 
-  <div class="post-content"><h1 id="test-page">test page<a hidden class="anchor" aria-hidden="true" href="#test-page">#</a></h1>
+  <div class="post-content"><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods.
+(in the example you will see)</p>
+<h1 id="introduction-or-motivation-for-me-writing-this">Introduction (or Motivation for me writing this)<a hidden class="anchor" aria-hidden="true" href="#introduction-or-motivation-for-me-writing-this">#</a></h1>
+<p>Why it motivate me to write about is:
+What is this for, example of application -&gt; let read to discover some available solutions.<br>
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .</p>
+<p>Problem setting, or when do we get this kind of problem.
+Some assumption in this problem setting:</p>
+<p>this blogs is structured as the lecture of Standford because I found it amazing, but the code was re-implemented/modified by me, source code reference is surely be referenced.</p>
+<h1 id="covariate-shift-problem">Covariate Shift Problem:<a hidden class="anchor" aria-hidden="true" href="#covariate-shift-problem">#</a></h1>
+<p>Have you ever face problem of different distribution of train set and test set?
+Example: Your train set is, but your test set is &hellip;</p>
+<p>Add figures here</p>
+<ul>
+<li>Explain Solution Important Sampling: cite some solution, but re-code the one in the lecture Standford -&gt; TNSE to visualize</li>
+<li>Write down the math</li>
+</ul>
+<p>Comment about this covariate</p>
+<ul>
+<li>Pros:</li>
+<li>Cons:</li>
+</ul>
+<p>Conclusion: Simple solution, we need a more generalize solution for the case where train set support does not include test set</p>
+<p>An example: different chất nhuộm, thiết bị&hellip;etc</p>
+<h1 id="domain-adaptation">Domain adaptation<a hidden class="anchor" aria-hidden="true" href="#domain-adaptation">#</a></h1>
+<ul>
+<li>
+<p>Example where the solution above can not solve: (accuracy is low) run mnist</p>
+</li>
+<li>
+<p>Explain solution: Mapping the features space in stead of sample space
+(adding introduction about features space)</p>
+</li>
+</ul>
+<p>Code:</p>
+<ul>
+<li>Adding the code of Domain Adaptation:</li>
+<li>TNSE visualize</li>
+<li>Loss chart</li>
+<li>Compare before and after implement with domain adaptation, compare with implement with important sampling</li>
+<li>save the TNSE of feature map -&gt; checking the mapp
+Comment:
+Pros:
+Cons:</li>
+</ul>
+<h1 id="domain-translation">Domain Translation<a hidden class="anchor" aria-hidden="true" href="#domain-translation">#</a></h1>
+<p>Intro: this post is seem two long for a relaxation readling later in the next</p>
+<p>Todo:</p>
+<ul>
+<li>Important sampling</li>
+<li>Gan blog post</li>
+<li>Cycle Gan blog post</li>
+</ul>
+<p>Question:</p>
+<ul>
+<li>Any new idea comming up for paper writing??</li>
+</ul>
 
 
   </div>
