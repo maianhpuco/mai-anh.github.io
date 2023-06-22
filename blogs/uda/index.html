@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Unsupervise domain adaptation | Mai-Anh&#39;s blog about Machine Learning</title>
+<meta name="keywords" content="">
+<meta name="description" content="TL;DR: Domain Adaptation is a common&hellip; In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)
+What is Domain Adaptation? What is this for, example of application -&gt; let read to discover some available solutions.
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .">
+<meta name="author" content="">
+<link rel="canonical" href="/blogs/uda/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="mask-icon" href="safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Unsupervise domain adaptation" />
+<meta property="og:description" content="TL;DR: Domain Adaptation is a common&hellip; In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)
+What is Domain Adaptation? What is this for, example of application -&gt; let read to discover some available solutions.
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blogs/uda/" /><meta property="article:section" content="blogs" />
+<meta property="article:published_time" content="2023-06-09T23:51:28+07:00" />
+<meta property="article:modified_time" content="2023-06-09T23:51:28+07:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Unsupervise domain adaptation"/>
+<meta name="twitter:description" content="TL;DR: Domain Adaptation is a common&hellip; In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)
+What is Domain Adaptation? What is this for, example of application -&gt; let read to discover some available solutions.
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) ."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Blogs",
+      "item": "/blogs/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Unsupervise domain adaptation",
+      "item": "/blogs/uda/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Unsupervise domain adaptation",
+  "name": "Unsupervise domain adaptation",
+  "description": "TL;DR: Domain Adaptation is a common\u0026hellip; In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)\nWhat is Domain Adaptation? What is this for, example of application -\u0026gt; let read to discover some available solutions.\nunderstand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .",
+  "keywords": [
+    
+  ],
+  "articleBody": " TL;DR: Domain Adaptation is a common… In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods. (in the example you will see)\nWhat is Domain Adaptation? What is this for, example of application -\u003e let read to discover some available solutions.\nunderstand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .\nProblem setting, or when do we get this kind of problem. Some assumption in this problem setting:\nthis blogs is structured as the lecture of Standford because I found it amazing, but the code was re-implemented/modified by me, source code reference is surely be referenced.\nhypothesis\nadding image example: hospital, text classification\nthere are many method mentions about domain adaptation,\nUnsupervised: Semi-supervised: In this blog post, we will discuss three methods in the unsupervised setting. Two of these methods will be explained in detail and provided with complete implementation. The third method, which is based on Cycle-GAN, will be just briefly mentioned and introduced. Note that structure of organized is follow standford lecture about meta learning Code was reference by some source (would be cited) and my modification.\nIntroduce about source and target dataset Notations: Covariate Shift Problem Covariate shift(or dataset shift) problem This refers to the situation where the distribution of training set and testing set are different. Usually in machine learning, it is assumed that the training and testing data have the same distribution. However, when there is a covariate shift, this assumption is violated, and it can lead to decreased performance of machine learning models.\nImage Caption: hehe A description or title for the image\nNotation Let’s get used to some notation (read it slowly!): We have a data sample x and it label y. Model hypothesis: \\( f_{\\theta}(x) \\) . Where \\( f_{\\theta}\\) , can be any model, linear regression, SVM…or any Deep Learning model. Loss on 1 sample: \\( \\mathcal{L}(f_{\\theta}(x), y) \\) . Which measure distance between model output and it ground truth label. Distribution of \\(\\color{teal}{\\text{train set (or Source dataset)}}\\) : \\(\\color{teal}{P_{S}(x, y)} \\) Distribution of \\(\\color{magenta}{\\text{test set (or Target dataset)}}\\) : \\(\\color{magenta}{P_{T}(x, y)} \\) We then use expectation to calculate the loss function for the train and test sets:\nLoss (or error) function on \\(\\color{teal}{\\text{train set}}\\) : \\( \\epsilon_{\\color{teal}{S}}(f_{\\theta})= E_{\\color{teal}{P_{T}(x, y)}} [\\mathcal{L}(f_{\\theta}(x), y )] \\) This loss funciton average the errors or losses of our model’s predictions over all the training samples.\nLoss (or error) function on \\(\\color{magenta}{\\text{test set}}\\) \\( \\epsilon_{\\color{magenta}{S}}(f_{\\theta})= E_{\\color{magenta}{P_{T}(x, y)}} [\\mathcal{L}(f_{\\theta}(x), y )].\\) .Similarly, we calculate the loss on the test set to evaluate how well our model generalizes to unseen data.\nObjective: Minimize \\( \\epsilon_{\\color{magenta}{T}}(f_{\\theta}) \\) under the assumption the distribution of train set and test set are not similar. however, there is another asssumption which will be prsent in the end of the section.\nSolution: A simple solution is: reweight the samples in the training set based on their likelihood of being representative of the test set, which mean assigning higher weights to samples that are more likely to be representative of the test. Doing so, we are assigning a higher prioritize for samples that are having more predicting ability on test set.\nBut how can we do that? We train a domain classifer, and use the proposition of output to make the prediction\nExample -\u003e adding example image (in the image of git covariate) , For those who care about “WHY”, let move to next section. for those who just care about the “HOW” you can move right to the Implementation section. The mathematical ground section bellow can give us the formular to solve this problem\nMathematical ground Let do some math together. Don’t worries, we can do it!\nFirstly, we recall the formular of expectation:\nDiscrete Random Variable: For a discrete random variable \\(Z\\) with probability mass function \\(P(X=x_i)\\), the expectation is calculated as: \\[E[Z] = \\sum_i z_i \\cdot P(Z=z_i)\\] Continuous Random Variable: For a continuous random variable \\(Z\\) with probability density function \\(f(x)\\), the expectation is calculated as: \\[E[Z] = \\int z \\cdot f(z) \\, dz \\] \\(f(z) \\) : is the probability density function (PDF) of the random variable. The integral is taken over the entire range of possible values of \\( Z\\) Expectation of a function: \\[E[g(Z)] = \\int f(z) \\cdot g(z) \\, dz \\] \\(g(z) \\) : function of Random Variable \\(X\\) \\(E[g(Z)] \\) : the expectation of the function Then, we break down the mathematical expressions of the objectives:\n\\[\\epsilon_{\\color{magenta}{T}}(f_{\\theta}) = E_{\\color{magenta}{P_{T}(x, y)}}[\\mathcal{L}(f_{\\theta}(x), y )] =\\int \\color{magenta}{P_{T}(x, y)} \\mathcal{L}(f_{\\theta}(x), y ) dx dy \\\\ \\hl{\\color{gray}{\\text{#in this step, we expand the formular of expectation in the form of intergal}} }\\] \\[ =\\int \\color{magenta}{P_{T}(x, y)} \\frac{\\color{teal}{P_{S}(x, y)}} {\\color{teal}{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) dx dy \\] \\[= \\int {\\color{teal}{P_{S}(x, y)}} \\frac{\\color{magenta}{P_{T}(x, y)}}{\\color{teal}{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) dx dy \\\\ \\color{gray}{\\text{# in these 2 rows, we adding 1 which is also}} \\frac {\\color{teal}{P_{S}(x, y)}} {\\color{teal}{P_{S}(x, y)}} \\color{gray}{\\text{and then modify the position}} \\] \\[ \\color{gray}{ \\text{#to understand next lines, we need to revisit the expectation formular for a function E[g(x)] above: } \\\\ \\int \\color{blue}{f(z)} \\cdot \\color{red}{g(z)}\\, dz = E_{Z}[g(z)] } , \\color{gray}{ \\text{similarly, let change the color code of the line above, we have } \\\\ \\int \\color{blue}{P_{S}(x, y)} \\cdot \\color{red}{ \\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) }\\, dx dy } \\\\ \\color{gray}{\\text{Here we have PDF} \\color{blue}{f(z) = P_{S}(x, y)} \\text{ and a function of X and Y are : } \\color{red}{ \\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) }\\ } \\] \\[ = E_{\\color{teal}{P_{S}(x, y)}} [ \\frac{\\color{magenta}{P_{T}(x, y)}} {\\color{teal}{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) ] \\\\ \\] \\[= E_{\\color{teal}{P_{S}(x, y)}} [ \\frac{\\color{magenta}{P_{T}(x)}} {\\color{teal}{P_{S}(x)}} \\mathcal{L}(f_{\\theta}(x), y)] \\] So easy that u can code it by your self write: you just need: model A : classify whether a sample of data is comming from train set or test set. Input is, out put is model B: classify, adding a propotion to a loss funcion or u can multily directly This method is call Important Sampling in Numerical Methods (in which subject i almost fail in school :v)\nImplementation This might be your most favorite part, let hand on with the codes: We understand the idea, let do the code:\nExplain Solution Important Sampling: cite some solution, but re-code the one in the lecture Standford -\u003e TNSE to visualize Write down the math Comment about this covariate\nPros: Cons: Conclusion: Simple solution, we need a more generalize solution for the case where train set support does not include test set\nAn example: different chất nhuộm, thiết bị…etc\nDomain adaptation : Example where the solution above can not solve: (accuracy is low) run mnist\nExplain solution: Mapping the features space in stead of sample space (adding introduction about features space)\nCode:\nAdding the code of Domain Adaptation: TNSE visualize Loss chart Compare before and after implement with domain adaptation, compare with implement with important sampling save the TNSE of feature map -\u003e checking the mapp Summary of Solution:\nComment: Pros: Cons:\nDomain Translation Cycle-GAN CyCADA: Intro: this post is seem two long for a relaxation readling later in the next\n\\[ \\epsilon_{\\color{magenta}{T}}(f_{\\theta}) = E_{\\color{magenta}{P_{T}(x, y)}}[\\mathcal{L}(f_{\\theta}(x), y )] = \\int \\color{magenta}{P_{T}(x, y)} \\mathcal{L}(f_{\\theta}(x), y ) dx dy \\\\ \\fcolorbox{lightgray}{\\text{\\# In this step, we expand the formula of expectation in the form of an integral}} \\] \\[ = \\int \\color{magenta}{P_{T}(x, y)} \\frac{\\color{teal}{P_{S}(x, y)}}{\\color{teal}{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) dx dy \\] \\[ = \\int {\\color{teal}{P_{S}(x, y)}} \\frac{\\color{magenta}{P_{T}(x, y)}}{\\color{teal}{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) dx dy \\\\ \\fcolorbox{lightgray}{\\text{\\# In these two rows, we add 1 which is also }} \\frac{\\color{teal}{P_{S}(x, y)}}{\\color{teal}{P_{S}(x, y)}} \\fcolorbox{lightgray}{\\text{ and then modify the position}} \\] \\[ \\fcolorbox{lightgray}{ \\text{\\# To understand the next lines, we need to revisit the expectation formula for a function } E[g(x)] \\text{ above:} \\\\ \\int \\color{blue}{f(z)} \\cdot \\color{red}{g(z)} \\, dz = E_{Z}[g(z)]}, \\fcolorbox{lightgray}{ \\text{ Similarly, let's change the color code of the line above, we have} \\\\ \\int \\color{blue}{P_{S}(x, y)} \\cdot \\color{red}{\\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y)} \\, dx dy \\text{ Here we have PDF } \\color{blue}{f(z) = P_{S}(x, y)} \\text{ and a function of } X \\text{ and } Y \\text{ is: } \\color{red}{\\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y)}} \\] \\[ = E_{\\color{teal}{P_{S}(x, y)}} \\left[ \\frac{\\color{magenta}{P_{T}(x, y)}}{\\color{teal}{P_{S}(x, y)}} \\mathcal{L}(f_{\\theta}(x), y) \\right] \\] \\[ = E_{\\color{teal}{P_{S}(x, y)}} \\left[ \\frac{\\color{magenta}{P_{T}(x)}}{\\color{teal}{P_{S}(x)}} \\mathcal{L}(f_{\\theta}(x), y) \\right] \\] Todo:\nImportant sampling Gan blog post Cycle Gan blog post Question:\nAny new idea comming up for paper writing?? test ",
+  "wordCount" : "1405",
+  "inLanguage": "en",
+  "datePublished": "2023-06-09T23:51:28+07:00",
+  "dateModified": "2023-06-09T23:51:28+07:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/blogs/uda/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mai-Anh's blog about Machine Learning",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="" accesskey="h" title="Mai-Anh&#39;s blog about Machine Learning (Alt + H)">Mai-Anh&#39;s blog about Machine Learning</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Unsupervise domain adaptation
+    </h1>
+    <div class="post-meta"><span title='2023-06-09 23:51:28 +0700 +07'>June 9, 2023</span>
+
+</div>
+  </header> 
+  <div class="post-content"><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h1 id="tldr">TL;DR:<a hidden class="anchor" aria-hidden="true" href="#tldr">#</a></h1>
+<p>Domain Adaptation is a common&hellip;
+In this blogs I will show you code and example of how clearly domain daptation is important, and a comparision of some methods.
+(in the example you will see)</p>
+<h1 id="what-is-domain-adaptation">What is Domain Adaptation?<a hidden class="anchor" aria-hidden="true" href="#what-is-domain-adaptation">#</a></h1>
+<p>What is this for, example of application -&gt; let read to discover some available solutions.<br>
+understand the UDA is the basic step to understand the Semi Domain Adaptation which is used recently in research as well as competition to enrich data in neural network (to win the competitions) .</p>
+<p>Problem setting, or when do we get this kind of problem.
+Some assumption in this problem setting:</p>
+<p>this blogs is structured as the lecture of Standford because I found it amazing, but the code was re-implemented/modified by me, source code reference is surely be referenced.</p>
+<ul>
+<li>
+<p>hypothesis</p>
+</li>
+<li>
+<p>adding image example: hospital, text classification</p>
+</li>
+</ul>
+<p>there are many method mentions about domain adaptation,</p>
+<ul>
+<li>Unsupervised:</li>
+<li>Semi-supervised:
+In this blog post, we will discuss three methods in the unsupervised setting. Two of these methods will be explained in detail and provided with complete implementation. The third method, which is based on Cycle-GAN, will be just briefly mentioned and introduced.</li>
+</ul>
+<p>Note that structure of organized is follow standford lecture about meta learning
+Code was reference by some source (would be cited) and my modification.</p>
+<ul>
+<li>Introduce about source and target dataset</li>
+</ul>
+<h1 id="notations">Notations:<a hidden class="anchor" aria-hidden="true" href="#notations">#</a></h1>
+<h1 id="covariate-shift-problem">Covariate Shift Problem<a hidden class="anchor" aria-hidden="true" href="#covariate-shift-problem">#</a></h1>
+<h3 id="covariate-shiftor-dataset-shift-problem">Covariate shift(or dataset shift) problem<a hidden class="anchor" aria-hidden="true" href="#covariate-shiftor-dataset-shift-problem">#</a></h3>
+<p>This refers to the situation where the <strong>distribution of training set and testing set are different</strong>. Usually in machine learning, it is assumed that the training and testing data have the same distribution. However, when there is a covariate shift, this assumption is violated, and it can lead to decreased performance of machine learning models.</p>
+<!-- raw HTML omitted -->
+<figure class="centered-caption">
+    <img loading="lazy" src="/blogs/uda/example-1.png"
+         alt="Image Alt Text"/> <figcaption>
+            <p>Image Caption: hehe A description or title for the image</p>
+        </figcaption>
+</figure>
+
+<h3 id="notation">Notation<a hidden class="anchor" aria-hidden="true" href="#notation">#</a></h3>
+<p>Let&rsquo;s get used to some notation (read it slowly!):
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</p>
+<ul>
+<li>We have a data sample x and it label y.</li>
+<li>Model hypothesis: <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \( f_{\theta}(x) \) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+. Where  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \( f_{\theta}\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+, can be any model, linear regression, SVM&hellip;or any Deep Learning model.</li>
+<li>Loss on 1 sample: <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \( \mathcal{L}(f_{\theta}(x), y) \) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+. Which measure distance between model output and it ground truth label.</li>
+<li>Distribution of <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(\color{teal}{\text{train set (or Source dataset)}}\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+:
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(\color{teal}{P_{S}(x, y)} \)</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</li>
+<li>Distribution of <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(\color{magenta}{\text{test set (or Target dataset)}}\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+:<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(\color{magenta}{P_{T}(x, y)} \) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</li>
+</ul>
+<p>We then use expectation to calculate the loss function for the train and test sets:</p>
+<ul>
+<li>
+<p>Loss (or error) function on  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(\color{teal}{\text{train set}}\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+:
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+\(
+\epsilon_{\color{teal}{S}}(f_{\theta})= E_{\color{teal}{P_{T}(x, y)}}
+[\mathcal{L}(f_{\theta}(x), y )]
+\)
+</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+
+This loss funciton average the errors or losses of our model&rsquo;s predictions over all the training samples.</p>
+</li>
+<li>
+<p>Loss (or error) function on <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(\color{magenta}{\text{test set}}\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+\(
+\epsilon_{\color{magenta}{S}}(f_{\theta})= E_{\color{magenta}{P_{T}(x, y)}}
+[\mathcal{L}(f_{\theta}(x), y )].\)
+</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+.Similarly, we calculate the loss on the test set to evaluate how well our model generalizes to unseen data.</p>
+</li>
+</ul>
+<h3 id="objective">Objective:<a hidden class="anchor" aria-hidden="true" href="#objective">#</a></h3>
+<p>Minimize <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+\(
+ \epsilon_{\color{magenta}{T}}(f_{\theta}) \)  </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+ under the assumption the distribution of train set and test set are not similar. however, there is another asssumption which will be prsent in the end of the section.</p>
+<h3 id="solution">Solution:<a hidden class="anchor" aria-hidden="true" href="#solution">#</a></h3>
+<p>A simple solution is: <strong>reweight the samples in the training set based on their likelihood of being representative of the test set</strong>, which mean assigning higher weights to samples that are more likely to be representative of the test. Doing so,  we are assigning a higher prioritize for samples that are having more predicting ability on test set.</p>
+<p><strong>But how can we do that? We train a domain classifer, and use the proposition of output to make the prediction</strong></p>
+<ul>
+<li>Example -&gt; adding example image (in the image of git covariate) ,</li>
+</ul>
+<p><strong>For those who care about &ldquo;WHY&rdquo;, let move to next section. for those who just care about the &ldquo;HOW&rdquo; you can move right to the Implementation section. The mathematical ground section bellow can give us the formular to solve this problem</strong></p>
+<h3 id="mathematical-ground">Mathematical ground<a hidden class="anchor" aria-hidden="true" href="#mathematical-ground">#</a></h3>
+<p>Let do some math together. Don&rsquo;t worries, we can do it!</p>
+<p><strong>Firstly, we recall the formular of expectation:</strong></p>
+<ul>
+<li>
+<p><strong>Discrete Random Variable:</strong>  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+ For a discrete random variable \(Z\) with probability mass function \(P(X=x_i)\), the expectation is calculated as:
+
+\[E[Z] = \sum_i z_i \cdot P(Z=z_i)\]
+</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</p>
+</li>
+<li>
+<p><strong>Continuous Random Variable:</strong>  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+For a continuous random variable \(Z\) with probability density function \(f(x)\), the expectation is calculated as:
+
+\[E[Z] = \int z \cdot f(z) \, dz  \]
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(f(z) \)</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+: is the probability density function (PDF) of the random variable. The integral is taken over the entire range of possible values of 	<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \( Z\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+
+</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</p>
+</li>
+<li>
+<p><strong>Expectation of a function</strong>:
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+ \[E[g(Z)] = \int f(z) \cdot g(z) \, dz \]
+	</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</p>
+<ul>
+<li><script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(g(z)   \) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+: function of Random Variable 	<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(X\) </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+</li>
+<li><script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> \(E[g(Z)] \)</span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+: the expectation of the function</li>
+</ul>
+</li>
+</ul>
+<p><strong>Then, we break down the mathematical expressions of the objectives:</strong></p>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+
+		\[\epsilon_{\color{magenta}{T}}(f_{\theta}) = E_{\color{magenta}{P_{T}(x, y)}}[\mathcal{L}(f_{\theta}(x), y )] 
+       =\int \color{magenta}{P_{T}(x, y)} \mathcal{L}(f_{\theta}(x), y ) dx dy \\  
+					
+					\hl{\color{gray}{\text{#in this step, we expand the formular of expectation in the form of intergal}}
+							}\]
+
+       \[ =\int \color{magenta}{P_{T}(x, y)} \frac{\color{teal}{P_{S}(x, y)}}
+       {\color{teal}{P_{S}(x, y)}} 
+       \mathcal{L}(f_{\theta}(x), y) dx dy \] 
+
+       \[= \int 
+
+       {\color{teal}{P_{S}(x, y)}} 
+       \frac{\color{magenta}{P_{T}(x, y)}}{\color{teal}{P_{S}(x, y)}}
+       \mathcal{L}(f_{\theta}(x), y) dx dy \\ 
+
+				\color{gray}{\text{# in these 2 rows, we adding 1 which is also}} 
+				\frac
+				{\color{teal}{P_{S}(x, y)}}
+				{\color{teal}{P_{S}(x, y)}}
+				\color{gray}{\text{and then modify the position}} 
+				\]
+
+
+			\[ \color{gray}{
+						\text{#to understand next lines, we need to revisit the expectation formular for a function E[g(x)] above: } \\  
+					\int 
+						\color{blue}{f(z)} \cdot \color{red}{g(z)}\, dz = E_{Z}[g(z)] }  , 
+						\color{gray}{
+								\text{similarly, let change the color code of the line above, we have  } \\ 
+								\int \color{blue}{P_{S}(x, y)} \cdot 
+								\color{red}{
+										\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y) }\, dx dy
+										} \\ 
+								\color{gray}{\text{Here we have PDF} \color{blue}{f(z) = P_{S}(x, y)} 
+									\text{ and a function of X and Y are : }
+									\color{red}{
+										\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y) }\
+										} 
+
+				\]
+
+       
+       \[ = E_{\color{teal}{P_{S}(x, y)}}  [ \frac{\color{magenta}{P_{T}(x, y)}}
+       {\color{teal}{P_{S}(x, y)}} 
+       \mathcal{L}(f_{\theta}(x), y) ] \\ \]  
+
+       \[= E_{\color{teal}{P_{S}(x, y)}}  [ \frac{\color{magenta}{P_{T}(x)}}
+       {\color{teal}{P_{S}(x)}} 
+       \mathcal{L}(f_{\theta}(x), y)] \]
+
+ </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+
+<p>So easy that u can code it by your self write: you just need:
+model A : classify whether a sample of data is comming from train set or test set. Input is, out put is
+model B: classify, adding a propotion to a loss funcion or u can multily directly
+This method is call <strong>Important Sampling</strong> in Numerical Methods (in which subject i almost fail in school :v)</p>
+<h3 id="implementation">Implementation<a hidden class="anchor" aria-hidden="true" href="#implementation">#</a></h3>
+<p>This might be your most favorite part, let hand on with the codes:
+We understand the idea, let do the code:</p>
+<ul>
+<li>Explain Solution Important Sampling: cite some solution, but re-code the one in the lecture Standford -&gt; TNSE to visualize</li>
+<li>Write down the math</li>
+</ul>
+<p>Comment about this covariate</p>
+<ul>
+<li>Pros:</li>
+<li>Cons:</li>
+</ul>
+<p>Conclusion: Simple solution, we need a more generalize solution for the case where train set support does not include test set</p>
+<p>An example: different chất nhuộm, thiết bị&hellip;etc</p>
+<h1 id="domain-adaptation-">Domain adaptation :<a hidden class="anchor" aria-hidden="true" href="#domain-adaptation-">#</a></h1>
+<ul>
+<li>
+<p>Example where the solution above can not solve: (accuracy is low) run mnist</p>
+</li>
+<li>
+<p>Explain solution: Mapping the features space in stead of sample space
+(adding introduction about features space)</p>
+</li>
+</ul>
+<p>Code:</p>
+<ul>
+<li>Adding the code of Domain Adaptation:</li>
+<li>TNSE visualize</li>
+<li>Loss chart</li>
+<li>Compare before and after implement with domain adaptation, compare with implement with important sampling</li>
+<li>save the TNSE of feature map -&gt; checking the mapp</li>
+</ul>
+<p>Summary of Solution:</p>
+<p>Comment:
+Pros:
+Cons:</p>
+<h1 id="domain-translation">Domain Translation<a hidden class="anchor" aria-hidden="true" href="#domain-translation">#</a></h1>
+<h2 id="cycle-gan">Cycle-GAN<a hidden class="anchor" aria-hidden="true" href="#cycle-gan">#</a></h2>
+<h2 id="cycada">CyCADA:<a hidden class="anchor" aria-hidden="true" href="#cycada">#</a></h2>
+<p>Intro: this post is seem two long for a relaxation readling later in the next</p>
+<blockquote>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex">
+
+
+\[
+\epsilon_{\color{magenta}{T}}(f_{\theta}) = E_{\color{magenta}{P_{T}(x, y)}}[\mathcal{L}(f_{\theta}(x), y )] 
+= \int \color{magenta}{P_{T}(x, y)} \mathcal{L}(f_{\theta}(x), y ) dx dy \\
+\fcolorbox{lightgray}{\text{\# In this step, we expand the formula of expectation in the form of an integral}}
+\]
+
+\[
+= \int \color{magenta}{P_{T}(x, y)} \frac{\color{teal}{P_{S}(x, y)}}{\color{teal}{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y) dx dy
+\]
+
+\[
+= \int {\color{teal}{P_{S}(x, y)}} \frac{\color{magenta}{P_{T}(x, y)}}{\color{teal}{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y) dx dy \\
+\fcolorbox{lightgray}{\text{\# In these two rows, we add 1 which is also }} \frac{\color{teal}{P_{S}(x, y)}}{\color{teal}{P_{S}(x, y)}} \fcolorbox{lightgray}{\text{ and then modify the position}}
+\]
+
+\[
+\fcolorbox{lightgray}{
+\text{\# To understand the next lines, we need to revisit the expectation formula for a function } E[g(x)] \text{ above:} \\
+\int \color{blue}{f(z)} \cdot \color{red}{g(z)} \, dz = E_{Z}[g(z)]},
+\fcolorbox{lightgray}{
+\text{ Similarly, let's change the color code of the line above, we have} \\
+\int \color{blue}{P_{S}(x, y)} \cdot \color{red}{\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y)} \, dx dy
+\text{ Here we have PDF } \color{blue}{f(z) = P_{S}(x, y)} \text{ and a function of } X \text{ and } Y \text{ is: } \color{red}{\frac{{P_{T}(x, y)}}{{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y)}}
+\]
+
+\[
+= E_{\color{teal}{P_{S}(x, y)}} \left[ \frac{\color{magenta}{P_{T}(x, y)}}{\color{teal}{P_{S}(x, y)}} \mathcal{L}(f_{\theta}(x), y) \right]
+\]
+
+\[
+= E_{\color{teal}{P_{S}(x, y)}} \left[ \frac{\color{magenta}{P_{T}(x)}}{\color{teal}{P_{S}(x)}} \mathcal{L}(f_{\theta}(x), y) \right]
+\]
+
+ </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+
+</blockquote>
+<p>Todo:</p>
+<ul>
+<li>Important sampling</li>
+<li>Gan blog post</li>
+<li>Cycle Gan blog post</li>
+</ul>
+<p>Question:</p>
+<ul>
+<li>Any new idea comming up for paper writing??</li>
+</ul>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<span id="latex"> test </span>
+<script>
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "latex"]);
+</script> 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            processEscapes: true
+        },
+        TeX: {
+            equationNumbers: { autoNumber: "AMS" },
+            extensions: ["AMSmath.js", "AMSsymbols.js"],
+            Macros: {}
+        },
+        "HTML-CSS": { scale: 90 },
+        SVG: { scale: 90 }
+    });
+</script>
+ 
+
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="">Mai-Anh&#39;s blog about Machine Learning</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
