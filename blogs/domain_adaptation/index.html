@@ -197,7 +197,7 @@ This blog post is inspired by the Stanford CS330 Deep Multi-Task &amp; Meta Lear
 </blockquote>
 <p><strong>Example 1</strong>: let&rsquo;s consider a competition where you train a model on a dataset of colored images (MNIST-M). However, during evaluation, you are provided with black and white images (MNIST). Similarly, you may encounter a situation where you are given a grayscale image, but you need to build a model for color images.</p>
 <figure class="align-center centered-caption">
-    <img loading="lazy" src="/blogs/uda/intro.png#center"
+    <img loading="lazy" src="/blogs/domain_adaptation/intro.png#center"
          alt="Image Alt Text" width="600px"/> <figcaption>
             <p>Image 1 - Training dataset: <a href="https://www.kaggle.com/datasets/aquibiqbal/mnistm">MNIST-M</a>; MNIST-M is created by combining MNIST digits with the patches randomly extracted from color photos of BSDS500 as their background. It contains 59,001 training and 90,001 test images.</p>
         </figcaption>
@@ -205,7 +205,7 @@ This blog post is inspired by the Stanford CS330 Deep Multi-Task &amp; Meta Lear
 
 <p><strong>Example 2</strong>: imagine you develop a model to classify different types of white blood cells using data from one hospital. However, when you try to use the same model in another hospital, the imaging techniques and conditions may differ, resulting in a decrease in performance. This situation becomes more complex when dealing with three datasets: Raabin, BCCD, and LISC, which may originate from various countries, hospitals, and equipment.</p>
 <figure class="align-center centered-caption">
-    <img loading="lazy" src="/blogs/uda/wbc-example.png#center"
+    <img loading="lazy" src="/blogs/domain_adaptation/wbc-example.png#center"
          alt="Some samples of the WBCs in Raabin-WBC, LISC, and BCCD datasets; Source" width="400px"/> <figcaption>
             <p>Some samples of the WBCs in Raabin-WBC, LISC, and BCCD datasets; <a href="https://www.researchgate.net/publication/354960074_New_segmentation_and_feature_extraction_algorithm_for_classification_of_white_blood_cells_in_peripheral_smear_images">Source</a></p>
         </figcaption>
@@ -575,7 +575,7 @@ This loss funciton average the errors or losses of our model&rsquo;s predictions
 <p><strong>Additional assumption</strong>: <strong>the support (range of values) of the source domain is larger than or equal to the support of the target domain</strong>. this means that the source domain covers a wider range of possible input features compared to the target domain.</p>
 <!-- raw HTML omitted -->
 <figure class="centered-caption">
-    <img loading="lazy" src="/blogs/uda/intro-img.png"
+    <img loading="lazy" src="/blogs/domain_adaptation/intro-img.png"
          alt="Image Alt Text"/> <figcaption>
             <p>Covariate Shift occur when a model have distribution of train set different from its test set, but the range of distribution of train set are larger than test set&rsquo;s</p>
         </figcaption>
@@ -1287,14 +1287,14 @@ We have
 </span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;| label acc: </span><span style="color:#e6db74">{</span>label_acc<span style="color:#e6db74">:</span><span style="color:#e6db74">.4f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
 </span></span></code></pre></div><p>We visualize output of the Domain Classifier, after computing the <strong>re-weighting score</strong> for each sample. <strong>As the images plotted, the images that have higher reweights score to the domain output are very similar to the TARGET domain.</strong>
 <figure class="centered-caption">
-    <img loading="lazy" src="/blogs/uda/mnist-m-highest-w.png"
+    <img loading="lazy" src="/blogs/domain_adaptation/mnist-m-highest-w.png"
          alt="Image Alt Text"/> <figcaption>
             <p>Top highest re-weighting score</p>
         </figcaption>
 </figure>
 </p>
 <figure class="centered-caption">
-    <img loading="lazy" src="/blogs/uda/mnist-m-lowest-w.png"
+    <img loading="lazy" src="/blogs/domain_adaptation/mnist-m-lowest-w.png"
          alt="Image Alt Text"/> <figcaption>
             <p>Top lowest re-weighting score</p>
         </figcaption>
